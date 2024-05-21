@@ -3,7 +3,7 @@ import Button from '../Shared/Button/Button'
 import { useState } from 'react';
 import { DateRange } from 'react-date-range';
 
-const RoomReservation = ({ room }) => {
+const RoomReservation = ({ room, }) => {
 
   const [state, setState] = useState([
     {
