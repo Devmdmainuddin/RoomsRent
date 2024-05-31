@@ -5,14 +5,21 @@ import { BsFillHouseAddFill } from 'react-icons/bs'
 // import { GrUserAdmin } from 'react-icons/gr'
 import { AiOutlineBars } from 'react-icons/ai'
 import { BsGraphUp } from 'react-icons/bs'
-import { NavLink } from 'react-router-dom'
+
 
 import { Link } from 'react-router-dom'
 import { MdHomeWork } from 'react-icons/md'
-import useAuth from '../../hooks/useAuth'
+import useAuth from '../../../hooks/useAuth'
+import useRole from '../../../hooks/useRole'
+import MenuItem from './Menu/MenuItem'
+import HostMenu from './Menu/HostMenu'
+import GuestMenu from './Menu/GuestMenu'
+import AdminMenu from './Menu/AdminMenu'
 
 const Sidebar = () => {
   const { logOut } = useAuth()
+  const [role, isloading] = useRole()
+  console.log(role, isloading)
   const [isActive, setActive] = useState(false)
 
   // Sidebar Responsive Handler
@@ -47,9 +54,8 @@ const Sidebar = () => {
 
       {/* Sidebar */}
       <div
-        className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-gray-100 w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
-          isActive && '-translate-x-full'
-        }  md:translate-x-0  transition duration-200 ease-in-out`}
+        className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-gray-100 w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${isActive && '-translate-x-full'
+          }  md:translate-x-0  transition duration-200 ease-in-out`}
       >
         <div>
           <div>
@@ -73,46 +79,15 @@ const Sidebar = () => {
             {/*  Menu Items */}
             <nav>
               {/* Statistics */}
-              <NavLink
-                to='/Dashboard'
-                end
-                className={({ isActive }) =>
-                  `flex items-center px-4 py-2 my-5  transition-colors duration-300 transform  hover:bg-gray-300   hover:text-gray-700 ${
-                    isActive ? 'bg-gray-300  text-gray-700' : 'text-gray-600'
-                  }`
-                }
-              >
-                <BsGraphUp className='w-5 h-5' />
+              <MenuItem
+                label='Statistics'
+                address='/Dashboard'
+                icon={BsGraphUp}>
 
-                <span className='mx-4 font-medium'>Statistics</span>
-              </NavLink>
-
-              {/* Add Room */}
-              <NavLink
-                to='add-room'
-                className={({ isActive }) =>
-                  `flex items-center px-4 py-2 my-5  transition-colors duration-300 transform  hover:bg-gray-300   hover:text-gray-700 ${
-                    isActive ? 'bg-gray-300  text-gray-700' : 'text-gray-600'
-                  }`
-                }
-              >
-                <BsFillHouseAddFill className='w-5 h-5' />
-
-                <span className='mx-4 font-medium'>Add Room</span>
-              </NavLink>
-              {/* My Listing */}
-              <NavLink
-                to='my-listings'
-                className={({ isActive }) =>
-                  `flex items-center px-4 py-2 my-5  transition-colors duration-300 transform  hover:bg-gray-300   hover:text-gray-700 ${
-                    isActive ? 'bg-gray-300  text-gray-700' : 'text-gray-600'
-                  }`
-                }
-              >
-                <MdHomeWork className='w-5 h-5' />
-
-                <span className='mx-4 font-medium'>My Listings</span>
-              </NavLink>
+              </MenuItem>
+              {role === 'guest' && <GuestMenu></GuestMenu>}
+              {role === 'host' && <HostMenu></HostMenu>}
+              {role === 'admin' && <AdminMenu></AdminMenu>}
             </nav>
           </div>
         </div>
@@ -121,18 +96,12 @@ const Sidebar = () => {
           <hr />
 
           {/* Profile Menu */}
-          <NavLink
-            to='/dashboard/profile'
-            className={({ isActive }) =>
-              `flex items-center px-4 py-2 my-5  transition-colors duration-300 transform  hover:bg-gray-300   hover:text-gray-700 ${
-                isActive ? 'bg-gray-300  text-gray-700' : 'text-gray-600'
-              }`
-            }
-          >
-            <FcSettings className='w-5 h-5' />
+          <MenuItem
+            label='Profile'
+            address='dashboard/profile'
+            icon={FcSettings}>
+          </MenuItem>
 
-            <span className='mx-4 font-medium'>Profile</span>
-          </NavLink>
           <button
             onClick={logOut}
             className='flex w-full items-center px-4 py-2 mt-5 text-gray-600 hover:bg-gray-300   hover:text-gray-700 transition-colors duration-300 transform'

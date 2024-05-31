@@ -4,11 +4,40 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import useAuth from '../../../hooks/useAuth'
 import avatarImg from '../../../assets/images/placeholder.jpg'
+import HostModal from '../../Modal/HostRequestModal'
+import useAxiosSecure from '../../../hooks/useAxiosSecure'
+import toast from 'react-hot-toast'
 
 const Navbar = () => {
   const { user, logOut } = useAuth()
+  const axiosSecure = useAxiosSecure()
   const [isOpen, setIsOpen] = useState(false)
-
+  const [isModalOpen,setIsModalOpen]=useState(false)
+  const closeModel =()=>{
+    setIsModalOpen(false)
+  }
+const modelHandler = async ()=>{
+console.log('i want to be a host');
+ 
+  try{
+    const currentUser= {
+      email:user?.email,
+      role:'guest',
+      status:'Requested',
+    }
+    const {data} = await axiosSecure.put(`${import.meta.env.VITE_API_URL}/user`,currentUser)
+  
+    if(data.modifiedCount >0){
+toast.success('success ! please wait for admin confirmation')
+    }else{
+      toast .success('please!,wait for admin approval')
+    }
+  }catch(err){
+   toast.error(err.message)
+  }finally{
+    closeModel()
+  }
+}
   return (
     <div className='fixed w-full bg-white z-10 shadow-sm'>
       <div className='py-4 border-b-[1px]'>
@@ -29,15 +58,17 @@ const Navbar = () => {
               <div className='flex flex-row items-center gap-3'>
                 {/* Become A Host btn */}
                 <div className='hidden md:block'>
-                  {!user && (
+                  {/* {!user && ( */}
                     <button
-                      disabled={!user}
+                      // disabled={!user}
+                      onClick={()=>setIsModalOpen(true)}
                       className='disabled:cursor-not-allowed cursor-pointer hover:bg-neutral-100 py-3 px-4 text-sm font-semibold rounded-full  transition'
                     >
                       Host your home
                     </button>
-                  )}
+                  {/* )} */}
                 </div>
+                <HostModal isOpen={isModalOpen} closeModel={closeModel} modelHandler={modelHandler}></HostModal>
                 {/* Dropdown btn */}
                 <div
                   onClick={() => setIsOpen(!isOpen)}

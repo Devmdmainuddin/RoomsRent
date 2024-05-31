@@ -9,6 +9,8 @@ import DashboardLayout from '../layouts/DashboardLayout'
 import Statistics from '../pages/dashboard/Common/Statistics'
 import AddRoom from '../pages/dashboard/Host/AddRoom'
 import MyListings from '../pages/dashboard/Host/MyListings'
+import Profile from '../pages/dashboard/Common/Profile'
+import ManageUsers from '../pages/dashboard/Admin/ManageUsers'
 
 
 export const router = createBrowserRouter([
@@ -44,6 +46,18 @@ export const router = createBrowserRouter([
         path:'my-listings',
         element: <MyListings></MyListings>
       },
+      {
+        path:'manage-Users',
+        element: <ManageUsers></ManageUsers>
+      },
+      {
+        path:'dashboard/profile',
+        element: <Profile></Profile>
+      },
+      // {
+      //   path:'/dashboard/profile',
+      //   element: <Profile/>
+      // },
     ]
   },
   { path: '/login', element: <Login /> },

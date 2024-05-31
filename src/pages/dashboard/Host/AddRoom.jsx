@@ -2,10 +2,16 @@ import { useState } from "react";
 import AddRoomForm from "../../../components/Form/AddRoomForm";
 import useAuth from "../../../hooks/useAuth";
 import { imageUpload } from "../../../api/utils";
+import { useMutation } from "@tanstack/react-query";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 
 const AddRoom = () => {
     const { user } = useAuth()
+    const axiosSecure =useAxiosSecure()
+    const navigare =useNavigate()
     const [imagePreview, setImagePreview] = useState()
     const [imageText, setImageTaxt] = useState('Upload image')
     const [dates, setDates] = useState({
@@ -16,6 +22,30 @@ const AddRoom = () => {
     const handleDates = item => {
         setDates(item.selection)
     }
+
+
+const {mutateAsync}=useMutation({
+    mutationFn:async roomData=>{
+        const{data}=await axiosSecure.post(`/room`,roomData)
+       
+        
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Your items has been delete",
+            showConfirmButton: false,
+            timer: 1500
+        });
+        navigare('/Dashboard/my-listings')
+        return data
+    },
+    onSuccess:()=>{
+        console.log("data add successfully")
+    }
+})
+
+
+
 
     const handleSubmit = async e => {
         e.preventDefault()
@@ -29,7 +59,7 @@ const AddRoom = () => {
         const quests = form.total_guest.value
         const bathrooms = form.bathrooms.value
         const description = form.description.value
-        const bedrooms = form.badrooms.value
+        const bedrooms = form.bedrooms.value
         const image = form.image.files[0]
         const host = {
             name: user?.displayName,
@@ -52,9 +82,13 @@ const AddRoom = () => {
                 host, 
                 image_url
             }
+            console.table(roomData);
+            console.log(image_url);
+            await mutateAsync(roomData)
         }
         catch (err) {
             console.log(err);
+            console.log('submition fail try again');
         }
     }
     const handleImage = image => {

@@ -29,7 +29,6 @@ const {id} = useParams()
 
   if (isLoading) return <LoadingSpinner />
 
-console.log(room);
 
 
   return (
@@ -46,7 +45,7 @@ console.log(room);
               <div className='w-full md:h-[60vh] overflow-hidden rounded-xl'>
                 <img
                   className='object-cover w-full'
-                  src={room.image}
+                  src={room.image_url}
                   alt='header image'
                 />
               </div>
